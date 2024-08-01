@@ -7,4 +7,7 @@ run: db
 clean:
 	rm -f db *.db
 
+test: db
+	bundle exec rspec
+
 .PHONEY: clean
