@@ -42,7 +42,7 @@ describe 'database' do
     result = run_script(script)
     expect(result.last(2)).to match_array([
                                             'db > Executed.',
-                                            'db > Need to implement updating parent after split'
+                                            'db > Need to implement splitting internal node'
                                           ])
   end
 
@@ -232,5 +232,91 @@ describe 'database' do
                                                         'Executed.',
                                                         'db > '
                                                       ])
+  end
+
+  it 'allows printing out the structure of a 4-leaf-node btree' do
+    script = []
+    pseudorandom_numbers = [
+      18,
+      7,
+      10,
+      29,
+      23,
+      4,
+      14,
+      30,
+      15,
+      26,
+      22,
+      19,
+      2,
+      1,
+      21,
+      11,
+      6,
+      20,
+      5,
+      8,
+      9,
+      3,
+      12,
+      27,
+      17,
+      16,
+      13,
+      24,
+      25,
+      28
+    ]
+    pseudorandom_numbers.each do |i|
+      script << "insert #{i} user#{i} person#{i}@example.com"
+    end
+    script << '.btree'
+    script << '.exit'
+
+    result = run_script(script)
+
+    expect(result[30...(result.length)]).to match_array([
+                                                          'db > Tree:',
+                                                          '- internal (size 3)',
+                                                          '  - leaf (size 7)',
+                                                          '    - 1',
+                                                          '    - 2',
+                                                          '    - 3',
+                                                          '    - 4',
+                                                          '    - 5',
+                                                          '    - 6',
+                                                          '    - 7',
+                                                          '  - key 7',
+                                                          '  - leaf (size 8)',
+                                                          '    - 8',
+                                                          '    - 9',
+                                                          '    - 10',
+                                                          '    - 11',
+                                                          '    - 12',
+                                                          '    - 13',
+                                                          '    - 14',
+                                                          '    - 15',
+                                                          '  - key 15',
+                                                          '  - leaf (size 7)',
+                                                          '    - 16',
+                                                          '    - 17',
+                                                          '    - 18',
+                                                          '    - 19',
+                                                          '    - 20',
+                                                          '    - 21',
+                                                          '    - 22',
+                                                          '  - key 22',
+                                                          '  - leaf (size 8)',
+                                                          '    - 23',
+                                                          '    - 24',
+                                                          '    - 25',
+                                                          '    - 26',
+                                                          '    - 27',
+                                                          '    - 28',
+                                                          '    - 29',
+                                                          '    - 30',
+                                                          'db > '
+                                                        ])
   end
 end
